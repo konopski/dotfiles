@@ -32,6 +32,13 @@ if has("autocmd")
 
   au Filetype python setl et ts=4 sw=4
   au FileType make setl noet ts=4 sw=4
+  
+  au FocusLost * :set number
+  au FocusGained * :set relativenumber
+
+  autocmd InsertEnter * :set number
+  autocmd InsertLeave * :set relativenumber
+
 endif
 
 if has("cscope") && filereadable("/usr/bin/cscope")
