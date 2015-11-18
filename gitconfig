@@ -2,6 +2,7 @@
 	ui = true
 [alias]
     co = checkout
+    st = status
     sta = status
     stat = status
     statu = status
