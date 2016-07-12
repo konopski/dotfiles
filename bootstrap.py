@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import glob
+import getpass
 
 
 def symlink(source, link_name):
@@ -25,9 +26,19 @@ def link_files(source, dest):
 def main():
   parser = argparse.ArgumentParser()
   #parser.add_argument('overwrite')
+  parser.add_argument('-u', '--user', dest='user', help='user name', required=False )
   args = parser.parse_args()
 
+  current_user = getpass.getuser()
   home = os.getenv('HOME', os.getenv('USERPROFILE'))
+  if args.user:
+    print 'finding home for: ' + args.user
+    home = home.replace( home.split(os.path.sep)[-1], '' ) + args.user
+    if not os.path.exists(home):
+       print 'cannot determine home for: ' + args.user
+       exit(1)
+  else:
+    pass
   print "home is: " + home
   
   dotfiles_root = os.path.abspath('.')
