@@ -38,6 +38,10 @@
 
     #remember clearcase?
     unco = checkout HEAD --
+
+    mavenclean = "!sh -c 'mvn clean'"
+    maveninstall = "!sh -c 'mvn install -fae'"
+    maveninstallskiptests = "!sh -c 'mvn install -fae -Dmaven.test.skip'"
 [help]
     autocorrect = 1 #fucking magic!
     
