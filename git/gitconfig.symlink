@@ -39,9 +39,14 @@
     #remember clearcase?
     unco = checkout HEAD --
 
-    mavenclean = "!sh -c 'mvn clean'"
-    maveninstall = "!sh -c 'mvn install -fae'"
-    maveninstallskiptests = "!sh -c 'mvn install -fae -Dmaven.test.skip'"
+    mavenclean = "!sh -c '[ -f pom.xml ] && mvn clean'"
+    maveninstall = "!sh -c '[ -f pom.xml ] && mvn install -fae $MAVEN_OPTS'"
+    maveninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn install -fae -Dmaven.test.skip $MAVEN_OPTS'"
+    mavencleaninstall = "!sh -c '[ -f pom.xml ] && mvn clean install -fae $MAVEN_OPTS'"
+    mavencleaninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn clean install -fae -Dmaven.test.skip $MAVEN_OPTS'"
+    mavenversion = "!sh -c '[ -f pom.xml ] &&  mvn org.apache.maven.plugins:maven-help-plugin:LATEST:evaluate -Dexpression=project.version -q -DforceStdout'"
+
+    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | sed s+feature/++ | sed s+bugfix/++ | sed \"s+_+ +g\" '"
 [help]
     autocorrect = 1 #fucking magic!
     
@@ -55,6 +60,8 @@
 
 [user]
 	name = Lukasz Konopski
-	email = konopski@gmail.com
+    email = konopski@gmail.com
 [core]
 	excludesfile = ~/.cvsignore
+#	autocrlf = true
+	autocrlf = input
