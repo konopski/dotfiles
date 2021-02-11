@@ -53,6 +53,7 @@
     mavenversion = "!sh -c '[ -f pom.xml ] &&  mvn org.apache.maven.plugins:maven-help-plugin:LATEST:evaluate -Dexpression=project.version -q -DforceStdout'"
 
     msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | sed s+feature/++ | sed s+bugfix/++ | sed \"s+_+ +g\" '"
+    cmg = "!sh -c 'git commit -m \"$(git msg)\" '"
 [help]
     autocorrect = 1 #fucking magic!
     
@@ -71,3 +72,5 @@
 	excludesfile = ~/.cvsignore
 #	autocrlf = true
 	autocrlf = input
+[pull]
+	ff = only
