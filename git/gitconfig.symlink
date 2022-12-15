@@ -52,7 +52,7 @@
     mavencleaninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn clean install -fae -Dmaven.test.skip $MAVEN_OPTS'"
     mavenversion = "!sh -c '[ -f pom.xml ] &&  mvn org.apache.maven.plugins:maven-help-plugin:LATEST:evaluate -Dexpression=project.version -q -DforceStdout'"
 
-    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | sed s+feature/++ | sed s+bugfix/++ | sed \"s+_+ +g\" '"
+    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | sed -e \"s+feature/++\" -e \"s+bugfix/++\" -e \"s+_+ +g\" -e \"s+-+ +2g\" '"
     cmg = "!sh -c 'git commit -m \"$(git msg)\" '"
 [help]
     autocorrect = 1 #fucking magic!
