@@ -1,11 +1,21 @@
 [color]
 	ui = true
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "decorate"]
+    remoteBranch = blue bold
 [color "diff"]
     meta = yellow bold
     frag = magenta bold
     old = red bold 
     new = green bold
-    context = yellow 
+    context = yellow
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan    
 [alias]
     co = checkout
     st = status
@@ -45,6 +55,18 @@
     #remember clearcase?
     unco = checkout HEAD --
 
+    #Jira tickets (from: http://blogs.atlassian.com/2014/08/whats-new-git-2-1/)
+    issues = "!f() { : git log ; echo 'Printing issue keys'; git log --oneline $@ | egrep -o [A-Z]+-[0-9]+ | sort | uniq; }; f"
+    #version for git below 2.1
+    #issues = !sh -c 'git log --oneline $@ | egrep -o [A-Z]+-[0-9]+ | sort | uniq' -
+
+    # Gets the current branch name (not so useful in itself, but used in other aliases)
+    branch-name = "!git rev-parse --abbrev-ref HEAD"
+    # Pushes the current branch to the remote "origin" (or the remote passed as the parameter) and set it to track the upstream branch
+    publish = "!sh -c 'git push -u ${1:-origin} $(git branch-name)' -"
+    # Deletes the remote version of the current branch from the remote "origin" (or the remote passed as the parameter)
+    unpublish = "!sh -c 'set -e; git push ${1:-origin} :$(git branch-name);git branch --unset-upstream $(git branch-name)' -"
+
     mavenclean = "!sh -c '[ -f pom.xml ] && mvn clean'"
     maveninstall = "!sh -c '[ -f pom.xml ] && mvn install -fae $MAVEN_OPTS'"
     maveninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn install -fae -Dmaven.test.skip $MAVEN_OPTS'"
@@ -52,8 +74,11 @@
     mavencleaninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn clean install -fae -Dmaven.test.skip $MAVEN_OPTS'"
     mavenversion = "!sh -c '[ -f pom.xml ] &&  mvn org.apache.maven.plugins:maven-help-plugin:LATEST:evaluate -Dexpression=project.version -q -DforceStdout'"
 
-    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | sed -e \"s+feature/++\" -e \"s+bugfix/++\" -e \"s+_+ +g\" -e \"s+-+ +2g\" '"
-    cmg = "!sh -c 'git commit -m \"$(git msg)\" '"
+    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | awk -F / \"{ print $NF }\" | sed -e \"s+_+ +g\" -e \"s+-+ +2g\" '"
+    cmg = "!bash -c ' if [ "$(git branch-name)" != "master" ]; then git commit -m \"$(git msg)\";  else echo \"---ERR: on master branch!\" ; fi '"
+    lastmsg = "show -s --format='%s'"
+    repcmg = "!sh -c 'git commit -m \"$(git lastmsg)\" '"
+    
 [help]
     autocorrect = 1 #fucking magic!
     
@@ -67,10 +92,11 @@
 
 [user]
 	name = Lukasz Konopski
-    email = konopski@gmail.com
+    	email = konopski@gmail.com
 [core]
 	excludesfile = ~/.cvsignore
 #	autocrlf = true
 	autocrlf = input
+	longpaths = true
 [pull]
 	ff = only
