@@ -17,7 +17,7 @@
     changed = green
     untracked = cyan    
 [alias]
-    co = checkout
+    co = switch
     st = status
     sta = status
     stat = status
@@ -74,7 +74,7 @@
     mavencleaninstallskiptests = "!sh -c '[ -f pom.xml ] && mvn clean install -fae -Dmaven.test.skip $MAVEN_OPTS'"
     mavenversion = "!sh -c '[ -f pom.xml ] &&  mvn org.apache.maven.plugins:maven-help-plugin:LATEST:evaluate -Dexpression=project.version -q -DforceStdout'"
 
-    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | awk -F / \"{ print $NF }\" | sed -e \"s+_+ +g\" -e \"s+-+ +2g\" '"
+    msg = "!sh -c 'git rev-parse --abbrev-ref HEAD | awk -F / \"{ print $NF }\" | sed -e \"s+_+ +g\" -e \"s+-+ +2g\" -e \"s+$USER/++\" '"
     cmg = "!bash -c ' if [ "$(git branch-name)" != "master" ]; then git commit -m \"$(git msg)\";  else echo \"---ERR: on master branch!\" ; fi '"
     lastmsg = "show -s --format='%s'"
     repcmg = "!sh -c 'git commit -m \"$(git lastmsg)\" '"
@@ -92,7 +92,7 @@
 
 [user]
 	name = Lukasz Konopski
-    	email = konopski@gmail.com
+	email = konopski@gmail.com
 [core]
 	excludesfile = ~/.cvsignore
 #	autocrlf = true
@@ -100,3 +100,8 @@
 	longpaths = true
 [pull]
 	ff = only
+[push]
+	autoSetupRemote = true
+
+[includeIf "gitdir:~/work/"]
+        path = ~/.gitconfig-work
